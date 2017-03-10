@@ -44,4 +44,3 @@ while selected == False:
         status = api.PostUpdate(str_potentially)
         print(status.text) # verify it worked
         selected = True
-
