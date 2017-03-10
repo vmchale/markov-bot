@@ -6,7 +6,8 @@ import argparse
 ## Command line parser
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('filepath', metavar='CREDENTIALS', type=str, help='an integer for the accumulator')
-parser.add_argument('--text', dest='corpus', metavar='CORPUS', type=str, help='path to the text you wish to analyze')
+parser.add_argument('--text', dest='corpus', metavar='CORPUS', type=str, help='path to the text you wish to mimic')
+parser.add_argument('-t', dest='test', action="store_true", default=False, help='Test text generation without tweeting.') # distance on markov chains??
 args = parser.parse_args()
 
 ## Function to help process credentials file
@@ -41,6 +42,11 @@ selected = False
 while selected == False:
     str_potentially = text_model.make_short_sentence(140)
     if not("http" in str_potentially):
-        status = api.PostUpdate(str_potentially)
-        print(status.text) # verify it worked
+        if not(args.test):
+            #tweet the generated text
+            status = api.PostUpdate(str_potentially)
+            print(status.text) # verify it worked
+        else:
+            #test mode; just display it
+            print(str_potentially)
         selected = True
