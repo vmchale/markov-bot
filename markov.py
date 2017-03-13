@@ -2,27 +2,37 @@ import markovify
 import twitter
 import itertools
 import argparse
+import random
 
-## Command line parser
+# Command line parser
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('filepath', metavar='CREDENTIALS', type=str, help='an integer for the accumulator')
-parser.add_argument('--text', dest='corpus', metavar='CORPUS', type=str, help='path to the text you wish to mimic')
-parser.add_argument('-t', dest='test', action="store_true", default=False, help='Test text generation without tweeting.') # distance on markov chains??
+parser.add_argument('--text', dest='corpus', metavar='CORPUS', type=str, help='path to the text you wish to mimic') # filepath should be a flag; corpus an argument!
+parser.add_argument('--coke-binge', dest='coke_binge', action="store_true", default=False, help='path to the text you wish to mimic') # instead of tweeting once, tweet a random number of times.
+parser.add_argument('-t', dest='test', action="store_true", default=False, help='Test text generation without tweeting.') # distance on markov chains?? distance on syntax trees? # default to test or default to tweet??
 args = parser.parse_args()
 
-## Function to help process credentials file
+
+# Function to help process credentials file
 def drop_tag(str):
     parsed = itertools.dropwhile(lambda x: x!= ':', str)
     str2 = "".join(parsed)
     parsed2 = itertools.dropwhile(lambda x: x == ' ' or x == ':', str2)
     return "".join(parsed2)
 
-## Open file with credentials
+
+# Set the
+if args.coke_binge:
+    coke_binge_num = random.randint(1, 6)
+else:
+    coke_binge_num = 1
+
+# Open file with credentials
 with open(args.filepath) as f:
     content = f.readlines()
 
-## Process api keys etc.
-content = [drop_tag(x.strip()) for x in content] 
+# Process api keys etc.
+content = [drop_tag(x.strip()) for x in content]
 
 # Get raw text of markov chain as string.
 with open(args.corpus) as f:
@@ -39,14 +49,16 @@ api = twitter.Api(consumer_key=content[0],
 
 # Generate three randomly-generated sentences of no more than 140 characters and tweet them.
 selected = False
-while selected == False:
-    str_potentially = text_model.make_short_sentence(140)
-    if not("http" in str_potentially):
-        if not(args.test):
-            #tweet the generated text
-            status = api.PostUpdate(str_potentially)
-            print(status.text) # verify it worked
-        else:
-            #test mode; just display it
-            print(str_potentially)
-        selected = True
+for i in range(0, coke_binge_num):
+    while selected is False:
+        str_potentially = text_model.make_short_sentence(140)
+        if not("http" in str_potentially):
+            if not(args.test):
+                # tweet the generated text
+                status = api.PostUpdate(str_potentially)
+                print(status.text)  # verify it worked
+            else:
+                # test mode; just display it
+                print(str_potentially)
+            selected = True
+    selected = False
