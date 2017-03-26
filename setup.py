@@ -10,7 +10,6 @@ setup(name='markovbot',
       packages=['markovbot'],
       scripts=['bin/markovbot'],
       install_requires=[
-          'gitpython',
           'markovify',
           'python-twitter',
       ],
