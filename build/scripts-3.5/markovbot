@@ -1,0 +1,41 @@
+#!python
+import markovify
+import markovbot
+import twitter
+import itertools
+import random
+
+# Command line parser
+
+args = parser()
+
+# Set the coke binge parameter
+if args.coke_binge:
+    coke_binge_num = random.randint(1, 6)
+else:
+    coke_binge_num = 1
+
+# Get raw text of markov chain as string.
+with open(args.text) as f:
+    text = f.read()
+
+# Build the model.
+text_model = markovify.Text(text)
+
+api = make_api_keys(args.filepath)
+
+# Generate three randomly-generated sentences of no more than 140 characters and tweet them.
+selected = False
+for i in range(0, coke_binge_num):
+    while selected is False:
+        str_potentially = text_model.make_short_sentence(140)
+        if not("http" in str_potentially):
+            if not(args.test):
+                # tweet the generated text
+                status = api.PostUpdate(str_potentially)
+                print(status.text)  # verify it worked
+            else:
+                # test mode; just display it
+                print(str_potentially)
+            selected = True
+    selected = False

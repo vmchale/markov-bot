@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+import markovbot
+import twitter
+import itertools
+import random
+
+# Command line parser
+
+args = markovbot.parser()
+
+# Set the coke binge parameter
+if args.coke_binge:
+    coke_binge_num = random.randint(1, 6)
+else:
+    coke_binge_num = 1
+
+text_model=markovbot.build_model(args.text)
+
+# Make the api keys
+api = markovbot.make_api_keys(args.filepath)
+
+markovbot.make_tweets(api, args.test, text_model, coke_binge_num)
