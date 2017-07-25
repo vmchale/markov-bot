@@ -2,6 +2,12 @@
 
 Written in python with the aid of markovify and python-twitter.
 
+## Install
+
+`python setup.py install`
+
+## Use
+
 Put your API keys in a file (e.g. .api-keys-trump) like so:
 
 ```
@@ -14,7 +20,7 @@ tok-sec: SECRET_TOKEN
 Then run:
 
 ```
-python markov.py PATH_TO_API_KEYS --text PATH_TO_CORPUS.txt
+python bin/markovbot.py PATH_TO_API_KEYS --text PATH_TO_CORPUS.txt
 ```
 
 to send one tweet at a time. 
